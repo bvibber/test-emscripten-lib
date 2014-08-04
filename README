@@ -1,0 +1,36 @@
+Tested on Mac OS X 10.9
+
+1.18.0 - works
+1.19.0 - fails
+1.20.0 - fails
+1.21.0 - fails
+
+Failure example:
+
+$ make
+emcc -c -o testlib.o testlib.c
+emar rcs libtest.a testlib.o
+emcc -s ERROR_ON_UNDEFINED_SYMBOLS=1 -L. -ltest -o test.js test.c
+error: unresolved symbol: testlibfunc
+aborting from js compiler due to exception: Aborting compilation due to previous errors | undefined
+Traceback (most recent call last):
+  File "/Users/brion/src/emscripten-lib/emscripten/emscripten.py", line 1463, in <module>
+    _main(environ=os.environ)
+  File "/Users/brion/src/emscripten-lib/emscripten/emscripten.py", line 1451, in _main
+    temp_files.run_and_clean(lambda: main(
+  File "/Users/brion/src/emscripten-lib/emscripten/tools/tempfiles.py", line 39, in run_and_clean
+    return func()
+  File "/Users/brion/src/emscripten-lib/emscripten/emscripten.py", line 1459, in <lambda>
+    DEBUG_CACHE=DEBUG_CACHE,
+  File "/Users/brion/src/emscripten-lib/emscripten/emscripten.py", line 1346, in main
+    jcache=jcache, temp_files=temp_files, DEBUG=DEBUG, DEBUG_CACHE=DEBUG_CACHE)
+  File "/Users/brion/src/emscripten-lib/emscripten/emscripten.py", line 858, in emscript_fast
+    assert '//FORWARDED_DATA:' in out, 'Did not receive forwarded data in pre output - process failed?'
+AssertionError: Did not receive forwarded data in pre output - process failed?
+Traceback (most recent call last):
+  File "/Users/brion/src/emscripten-lib/emscripten/emcc", line 1608, in <module>
+    final = shared.Building.emscripten(final, append_ext=False, extra_args=extra_args)
+  File "/Users/brion/src/emscripten-lib/emscripten/tools/shared.py", line 1436, in emscripten
+    assert os.path.exists(filename + '.o.js'), 'Emscripten failed to generate .js'
+AssertionError: Emscripten failed to generate .js
+make: *** [test.js] Error 1
